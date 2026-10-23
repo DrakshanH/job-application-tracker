@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(ApplicationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleRuntimeException(RuntimeException ex) {
 

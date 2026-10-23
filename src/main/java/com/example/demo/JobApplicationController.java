@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/applications")
@@ -30,6 +31,20 @@ public class JobApplicationController {
     @GetMapping("/{id}")
     public JobApplication getApplicationById(@PathVariable Long id) {
         return service.getApplicationById(id);
+    }
+
+    @GetMapping("/filter")
+    public List<JobApplication> getApplicationsByStatus(
+            @RequestParam String status) {
+
+        return service.getApplicationsByStatus(status);
+    }
+
+    @GetMapping("/filter/company")
+    public List<JobApplication> getApplicationsByCompany(
+            @RequestParam String company) {
+
+        return service.getApplicationsByCompany(company);
     }
 
     @PutMapping("/{id}")

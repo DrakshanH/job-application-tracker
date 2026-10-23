@@ -45,7 +45,15 @@ public class JobApplicationService {
 
         return repository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Application not found"));
+                        new ApplicationNotFoundException("Application not found"));
+    }
+
+    public List<JobApplication> getApplicationsByStatus(String status) {
+        return repository.findByStatus(status);
+    }
+
+    public List<JobApplication> getApplicationsByCompany(String company) {
+        return repository.findByCompany(company);
     }
 
     public JobApplication updateApplication(Long id, JobApplication application) {
