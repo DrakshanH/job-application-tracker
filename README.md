@@ -1,132 +1,172 @@
-# 💼 Job Application Tracker
+# Job Application Tracker API
 
-A RESTful backend application built with **Java and Spring Boot** to manage job applications, with user registration, login, and JWT-based authentication.
+A RESTful backend application built with **Java and Spring Boot** to manage job applications, featuring CRUD operations, filtering, pagination, sorting, and JWT-based authentication.
 
-## 🚀 About the Project
+## Overview
 
-Job Application Tracker is a backend application designed to help organize job applications in one place.
+Job Application Tracker helps users organize and manage their job applications in one place. The backend exposes REST APIs for managing application details and protects application endpoints using Spring Security and JSON Web Tokens (JWT).
 
-The project follows a layered architecture and explores practical backend development concepts, including REST APIs, service-layer design, database persistence, DTOs, exception handling, and authentication using Spring Security and JSON Web Tokens (JWT).
+## Tech Stack
 
-The project is actively being developed, with additional backend features planned as development progresses.
+- **Language:** Java
+- **Framework:** Spring Boot
+- **Build Tool:** Maven
+- **Database:** MySQL
+- **Persistence:** Spring Data JPA and Hibernate
+- **Security:** Spring Security, BCrypt password hashing, JWT
+- **API Testing:** Postman
+- **Version Control:** Git and GitHub
 
-## 🛠️ Tech Stack
+## Features
 
-| Technology | Purpose |
-|---|---|
-| ☕ Java | Core programming language |
-| 🌱 Spring Boot | Backend framework |
-| 🔐 Spring Security | Application security and authentication |
-| 🎟️ JJWT | JWT creation and validation |
-| 🔗 Spring Data JPA | Data access and persistence |
-| 🗄️ Hibernate | Object-relational mapping (ORM) |
-| 🐬 MySQL | Relational database |
-| 📦 Maven | Dependency management and build |
-| 🔌 REST APIs | Client-server communication |
-| 🧪 Postman | API testing |
+- User registration and login
+- Password hashing using BCrypt
+- JWT-based authentication
+- Protected application endpoints
+- Create, read, update, and delete job applications
+- Search applications by company or status
+- Pagination using page number and page size
+- Sorting by application fields in ascending or descending order
+- Request validation using Jakarta Bean Validation
+- Global exception handling and meaningful HTTP status codes
+- Application logging using SLF4J
+- Environment-based configuration for database credentials and JWT secrets
 
-## ✨ Current Features
+## Application Details
 
-### Job Application Management
-- Create job applications
-- Retrieve job applications
-- Update existing job applications
-- Delete job applications
-- Persist data using MySQL, JPA, and Hibernate
-- Use DTOs for request and response handling
-- Separate controller, service, and repository layers
-- Handle exceptions globally
+Each job application can contain:
 
-### Authentication and Security
-- User registration endpoint
-- User login endpoint
-- JWT service for token-related operations
-- JWT authentication filter
-- Spring Security configuration
-- User persistence and repository layer
-- Custom user-details service
+- Company name
+- Job role
+- Application date
+- Application status
+- Notes
 
-> Authentication flows and endpoint access rules should be verified through integration testing before considering the security implementation fully validated.
+## API Reference
 
-## 🏗️ Architecture
-
-The application uses a layered backend architecture:
-
-```text
-                   Client (Postman)
-                          |
-                          v
-                Controller Layer
-                          |
-                          v
-                  Service Layer
-                          |
-                          v
-                Repository Layer
-                          |
-                          v
-                    MySQL DB
-```
-
-Spring Security and the JWT authentication filter participate in processing secured HTTP requests before they reach the application controllers.
-
-## 📂 Project Structure
-
-```text
-src/
-├── main/
-│   ├── java/com/example/demo/
-│   │   ├── DemoApplication.java
-│   │   ├── JobApplication.java
-│   │   ├── JobApplicationController.java
-│   │   ├── JobApplicationService.java
-│   │   ├── JobApplicationRepository.java
-│   │   ├── JobApplicationRequest.java
-│   │   ├── JobApplicationResponse.java
-│   │   ├── ApplicationNotFoundException.java
-│   │   ├── GlobalExceptionHandler.java
-│   │   ├── AuthController.java
-│   │   ├── AuthService.java
-│   │   ├── CustomUserDetailsService.java
-│   │   ├── JwtAuthenticationFilter.java
-│   │   ├── JwtService.java
-│   │   ├── LoginRequest.java
-│   │   ├── RegisterRequest.java
-│   │   ├── SecurityConfig.java
-│   │   ├── User.java
-│   │   └── UserRepository.java
-│   └── resources/
-│       └── application.properties.example
-└── test/
-    └── resources/
-        └── application.properties
-```
-
-The test resources configure an in-memory H2 database for automated tests. The application uses MySQL for local development.
-
-## 🔌 API Operations
-
-### Job Applications
-
-| Method | Operation |
-|---|---|
-| `GET` | Retrieve job applications |
-| `POST` | Create a job application |
-| `PUT` | Update a job application |
-| `DELETE` | Delete a job application |
+Base URL: `http://localhost:8080`
 
 ### Authentication
 
-| Operation | Purpose |
-|---|---|
-| Registration | Create a user account |
-| Login | Authenticate a user and obtain a JWT, if configured by the implementation |
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/register` | Register a user |
+| POST | `/auth/login` | Authenticate a user and obtain a JWT |
 
-The exact endpoint paths, request formats, and authentication requirements are defined by the controller and Spring Security configuration.
+### Job Applications
 
-API requests can be tested using Postman.
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/applications` | Create an application |
+| GET | `/applications` | Retrieve applications |
+| GET | `/applications/{id}` | Retrieve an application by ID |
+| PUT | `/applications/{id}` | Update an application |
+| DELETE | `/applications/{id}` | Delete an application |
+| GET | `/applications/filter?status=APPLIED` | Filter by status |
+| GET | `/applications/filter/company?company=Google` | Filter by company |
 
-## ⚙️ Running Locally
+### Pagination and Sorting
+
+Retrieve the first five applications:
+
+`GET /applications?page=0&size=5`
+
+Sort applications by company name alphabetically:
+
+`GET /applications?sort=company,asc`
+
+Sort by application date, newest first:
+
+`GET /applications?sort=applicationDate,desc`
+
+Combine pagination and sorting:
+
+`GET /applications?page=0&size=2&sort=company,asc`
+
+Page numbering starts at zero. Paginated responses include the requested records and metadata such as total elements and total pages.
+
+## Example Requests
+
+### Register a user
+
+`POST /auth/register`
+
+```json
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+```
+
+### Log in
+
+`POST /auth/login`
+
+```json
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+```
+
+Use the JWT returned by the login endpoint in the `Authorization` header for protected requests:
+
+`Authorization: Bearer <your_jwt_token>`
+
+### Create a job application
+
+`POST /applications`
+
+```json
+{
+  "company": "Google",
+  "role": "Software Engineer",
+  "applicationDate": "2026-10-25",
+  "status": "APPLIED",
+  "notes": "Applied through careers page"
+}
+```
+
+Set the request body type to JSON and include a valid JWT in the authorization header.
+
+## Project Structure
+
+```text
+com.example.demo
+├── controller
+│   ├── AuthController
+│   └── JobApplicationController
+├── service
+│   ├── AuthService
+│   ├── JobApplicationService
+│   └── JwtService
+├── repository
+│   ├── UserRepository
+│   └── JobApplicationRepository
+├── entity
+│   ├── User
+│   └── JobApplication
+├── dto
+│   ├── RegisterRequest
+│   ├── LoginRequest
+│   ├── JobApplicationRequest
+│   └── JobApplicationResponse
+├── security
+│   ├── SecurityConfig
+│   ├── JwtAuthenticationFilter
+│   └── CustomUserDetailsService
+└── exception
+    ├── ApplicationNotFoundException
+    └── GlobalExceptionHandler
+```
+
+## Setup and Configuration
+
+### Prerequisites
+
+- Java 17 or later
+- MySQL
+- Git
 
 ### 1. Clone the repository
 
@@ -135,80 +175,58 @@ git clone https://github.com/DrakshanH/job-application-tracker.git
 cd job-application-tracker
 ```
 
-### 2. Create the MySQL database
+### 2. Create the database
 
-Create the database configured for the application. For the current local setup, the database name is `job_application`.
+Run the following SQL command in MySQL:
 
-### 3. Configure application properties
+```sql
+CREATE DATABASE taskdb;
+```
 
-Create a local file at:
+### 3. Configure environment variables
 
-`src/main/resources/application.properties`
+Configure the following variables in your IDE's run configuration or your local environment:
 
-Use `src/main/resources/application.properties.example` as a reference and configure your own database URL, username, and password.
+```text
+DB_URL=jdbc:mysql://localhost:3306/taskdb
+DB_USERNAME=your_mysql_username
+DB_PASSWORD=your_mysql_password
+JWT_SECRET=your_unique_random_secret
+```
 
-Configure any JWT signing secret required by the application using the configuration expected by `JwtService`. Use a strong, private value and never commit real secrets.
+Use a strong, randomly generated JWT secret of at least 32 bytes for the current HMAC configuration.
 
-**Database credentials and signing secrets must remain out of version control.**
+Do not commit actual credentials or secrets to version control.
 
 ### 4. Run the application
 
-On Windows PowerShell:
+On Windows, use the Maven wrapper:
 
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-Make sure MySQL is running and the database configuration is correct before starting the application.
+Alternatively, run `DemoApplication` from your IDE.
 
-## 🧪 Testing
+The API will be available at `http://localhost:8080` when the application starts successfully.
 
-Run the automated test suite using Maven:
+## Implementation Concepts
 
-```powershell
-.\mvnw.cmd clean test
-```
+This project demonstrates practical backend development concepts, including:
 
-The test suite uses an in-memory H2 database configuration so tests do not need to connect to the local MySQL instance.
-
-Postman can be used for manual API testing, including:
-
-- Job application CRUD operations
-- Request and response handling
-- Database persistence
-- Error handling
-- User registration and login
-- JWT-protected requests and unauthorized access scenarios
-
-## 📈 Development Roadmap
-
-### ✅ Implemented
-- Spring Boot project setup
-- REST API fundamentals and CRUD operations
-- MySQL integration
-- JPA/Hibernate persistence
-- Repository and service layers
+- Layered architecture using controllers, services, and repositories
+- Dependency injection through constructors
+- RESTful API design and HTTP methods
+- Object-relational mapping with JPA and Hibernate
 - DTO-based request and response handling
-- Global exception handling
-- Spring Security integration
-- JWT-related authentication components
-- Automated test configuration using H2
+- Validation and centralized exception handling
+- Password hashing and JWT authentication
+- Database filtering, pagination, and sorting
+- Logging and environment-based configuration
 
-### 🚧 Planned / To Verify
-- Input validation
-- Pagination and sorting
-- Consistent error response formats
-- Structured logging
-- End-to-end authentication and authorization testing
-- API documentation
-- Further security hardening
+## Future Improvements
 
-## 🎯 Project Goal
-
-The goal of this project is to build a practical backend application while strengthening skills in Java, Spring Boot, REST APIs, database management, security, and backend architecture.
-
-## 📌 Status
-
-**Active Development**
-
-The application is being expanded incrementally as additional backend features and production-oriented practices are implemented.
+- Automated unit and integration tests
+- Frontend integration using React
+- Deployment and containerization
+- Additional application search and reporting features
