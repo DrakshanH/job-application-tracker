@@ -1,26 +1,11 @@
-package com.example.demo;
+package com.example.demo.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class RegisterRequest {
 
     private String username;
     private String password;
 
     // getters and setters
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -34,5 +19,4 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

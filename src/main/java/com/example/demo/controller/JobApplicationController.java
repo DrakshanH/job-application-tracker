@@ -1,10 +1,16 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.entity.JobApplication;
+import com.example.demo.dto.JobApplicationRequest;
+import com.example.demo.dto.JobApplicationResponse;
+import com.example.demo.service.JobApplicationService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/applications")
@@ -24,8 +30,8 @@ public class JobApplicationController {
     }
 
     @GetMapping
-    public List<JobApplication> getAllApplications() {
-        return service.getAllApplications();
+    public Page<JobApplication> getAllApplications(Pageable pageable) {
+        return service.getAllApplications(pageable);
     }
 
     @GetMapping("/{id}")

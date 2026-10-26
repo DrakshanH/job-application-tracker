@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.security;
 
+import com.example.demo.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -17,15 +18,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService userDetailsService;
 
-    private final SecretKey key =
-            Keys.hmacShaKeyFor(
-                    "my-super-secret-key-for-jwt-123456789".getBytes()
-            );
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(
+                java.nio.charset.StandardCharsets.UTF_8));
+    }
 
     public JwtAuthenticationFilter(
             CustomUserDetailsService userDetailsService) {
@@ -50,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             Claims claims = Jwts.parser()
-                    .verifyWith(key)
+                    .verifyWith(getSigningKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();

@@ -1,13 +1,24 @@
-package com.example.demo;
+package com.example.demo.service;
 
+import com.example.demo.dto.JobApplicationRequest;
+import com.example.demo.dto.JobApplicationResponse;
+import com.example.demo.entity.JobApplication;
+import com.example.demo.exception.ApplicationNotFoundException;
+import com.example.demo.repository.JobApplicationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class JobApplicationService {
 
     private final JobApplicationRepository repository;
+
+    private static final Logger logger = LoggerFactory.getLogger(JobApplicationService.class);
 
     public JobApplicationService(JobApplicationRepository repository) {
         this.repository = repository;
@@ -23,7 +34,13 @@ public class JobApplicationService {
         application.setStatus(request.getStatus());
         application.setNotes(request.getNotes());
 
+        logger.info("Creating job application for company: {}",
+                request.getCompany());
+
         JobApplication savedApplication = repository.save(application);
+
+        logger.info("Created job application with ID: {}",
+                savedApplication.getId());
 
         JobApplicationResponse response = new JobApplicationResponse();
 
@@ -37,8 +54,8 @@ public class JobApplicationService {
         return response;
     }
 
-    public List<JobApplication> getAllApplications() {
-        return repository.findAll();
+    public Page<JobApplication> getAllApplications(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public JobApplication getApplicationById(Long id) {

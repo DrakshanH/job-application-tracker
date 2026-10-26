@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.repository;
 import java.util.List;
 
+import com.example.demo.entity.JobApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
